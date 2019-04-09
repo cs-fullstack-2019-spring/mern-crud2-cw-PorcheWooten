@@ -6,7 +6,7 @@ let RSVPCollection = require('../models/RSVPSchema');
     ENDPOINT IMPLEMENTATION OF A SIMPLE RSVP WEB SERVICE
  */
 // Return the list of all the current RSVPs
-router.get('/', function (req, res, next) {
+router.get('/listAll', function (req, res, next) {
     console.log(`LIST RSVPS`);
     RSVPCollection.find({}, (errors, results) => {
         errors ? res.send(errors) : res.send(results);
@@ -32,12 +32,22 @@ router.put('/:id', function (req, res, next) {
 
 // Delete a specific RSVP -IMPLEMENT YOUR OWN FUNCTION
 router.delete('/:id', function (req, res, next) {
+    RSVPCollection.deleteOne(req.body, (err, results)=>{
+        if(err) res.send(err);
+        else res.send('Deleted!!')
+    });
     res.send(`DELETE RSVP ${req.params.id}`);
 });
 
+
 //Create a new RSVP -IMPLEMENT YOUR OWN FUNCTION
-router.post('/', function (req, res, next) {
-    res.send(`CREATE NEW RSVP ${req.body.rsvp_person} ${req.body.rsvp_going}`);
+router.post('/addNew', function (req, res, next) {
+    RSVPCollection.create(req.body, (err, results)=>{
+        // console.log(`${req.body.rsvp_person} ${req.body.rsvp_going}`);
+        if(err) res.send(err);
+        else res.send(results);
+    });
+
 });
 
 module.exports = router;
